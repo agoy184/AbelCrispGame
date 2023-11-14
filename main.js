@@ -19,21 +19,17 @@ cc  cc
 
 // Game design variable container
 const G = {
-	WIDTH: 100,
-	HEIGHT: 150,
+	WIDTH: 150,
+	HEIGHT: 100,
 
     STAR_SPEED_MIN: 0.5,
-	STAR_SPEED_MAX: 1.0,
-    
-    PLAYER_FIRE_RATE: 4,
-    PLAYER_GUN_OFFSET: 3,
-
-    FBULLET_SPEED: 5
+	STAR_SPEED_MAX: 1.0
 };
 
 // Game runtime options
 // Refer to the official documentation for all available options
 options = {
+	theme: "dark",
 	viewSize: {x: G.WIDTH, y: G.HEIGHT},
     isCapturing: true,
     isCapturingGameCanvasOnly: true,
@@ -56,8 +52,6 @@ let stars;
 /**
  * @typedef {{
  * pos: Vector,
- * firingCooldown: number,
- * isFiringLeft: boolean
  * }} Player
  */
 
@@ -65,18 +59,8 @@ let stars;
  * @type { Player }
  */
 let player;
-
-/**
- * @typedef {{
- * pos: Vector
- * }} FBullet
- */
-
-/**
- * @type { FBullet [] }
- */
-let fBullets;
-
+let shipY = 80;
+let shipDown = 0;
 // The game loop function
 function update() {
     // The init function running at startup
@@ -101,12 +85,10 @@ function update() {
         });
 
         player = {
-            pos: vec(G.WIDTH * 0.5, G.HEIGHT * 0.5),
-            firingCooldown: G.PLAYER_FIRE_RATE,
-            isFiringLeft: true
-        };
+            //pos: vec(G.WIDTH * 0.5, G.HEIGHT * 0.5)
+			pos: vec(10, 10)
 
-        fBullets = [];
+        };
 	}
 
     // Update for Star
@@ -121,55 +103,23 @@ function update() {
         // Draw the star as a square of size 1
         box(s.pos, 1);
     });
-
-    // Updating and drawing the player
-    player.pos = vec(input.pos.x, input.pos.y);
+	if (shipDown == 0) {
+		shipY++;
+	} else if (shipDown == 1) {
+		shipY--;
+	}
+	if (shipY == 95) {
+		shipDown = 1;
+	} else if (shipY == 20) {
+		shipDown = 0;
+	}
+    player.pos = vec(10, shipY);
+	//Go back and forth between 20 and 140
+	console.log(input.pos.y);
     player.pos.clamp(0, G.WIDTH, 0, G.HEIGHT);
-    // Cooling down for the next shot
-    player.firingCooldown--;
-    // Time to fire the next shot
-    if (player.firingCooldown <= 0) {
-        // Get the side from which the bullet is fired
-        const offset = (player.isFiringLeft)
-            ? -G.PLAYER_GUN_OFFSET
-            : G.PLAYER_GUN_OFFSET;
-        // Create the bullet
-        fBullets.push({
-            pos: vec(player.pos.x + offset, player.pos.y)
-        });
-        // Reset the firing cooldown
-        player.firingCooldown = G.PLAYER_FIRE_RATE;
-        // Switch the side of the firing gun by flipping the boolean value
-        player.isFiringLeft = !player.isFiringLeft;
 
-        color("yellow");
-        // Generate particles
-        particle(
-            player.pos.x + offset, // x coordinate
-            player.pos.y, // y coordinate
-            4, // The number of particles
-            1, // The speed of the particles
-            -PI/2, // The emitting angle
-            PI/4  // The emitting width
-        );
-    }
-    color ("black");
+    // color("cyan");
+    color ("light_black");
+    // box(player.pos, 4);
     char("a", player.pos);
-
-    // text(fBullets.length.toString(), 3, 10);
-
-    // Updating and drawing bullets
-    fBullets.forEach((fb) => {
-        // Move the bullets upwards
-        fb.pos.y -= G.FBULLET_SPEED;
-        
-        // Drawing
-        color("yellow");
-        box(fb.pos, 2);
-    });
-
-    remove(fBullets, (fb) => {
-        return fb.pos.y < 0;
-    });
 }
-
