@@ -20,7 +20,43 @@
     <script src="bundle.js"></script>
     <script>
       title = "Testing this2";
+      description = `
+        "click"
+      `
 
+      characters = [
+        `yyy`
+      ]
+
+      const G = {
+        WIDTH: 60,
+        HEIGHT: 90
+      };
+
+      options = {
+        theme: "dark"
+      };
+
+      /**
+      * @typedef {{
+      * pos: Vector,
+      * }} Player
+      */
+
+      /**
+      * @type { Player }
+      */
+      let player;
+      function update() {
+        if (!ticks) {
+          player = {
+            pos: vec(G.WIDTH * 0.5, G.HEIGHT * 0.5)
+          };
+        }
+        color("cyan");
+        box(player.pos, 4);
+
+      }
       addGameScript();
       window.addEventListener("load", onLoad);
     </script>
