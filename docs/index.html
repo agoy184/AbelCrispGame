@@ -19,18 +19,21 @@
     <script src="https://unpkg.com/lodash.clonedeep@4.5.0/index.js"></script>
     <script src="bundle.js"></script>
     <script>
-title = "Testing this2";
+title = "Downvote Dodger";
 description = `
-  "CLICKer"
+  To move...
+  hold CLICK!
 `
 
 characters = [
 `
-  yyy
+   y
+  y y
+ y   y
 `,`
-  rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-  rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
-   
+r   r
+ r r
+  r 
 `,
 ];
 
@@ -108,7 +111,7 @@ let waveCount;
     addScore(1);
   }
 
-  color("cyan");
+  color("yellow");
   char("a", player.pos);
 
   remove(enemies, (e) => {
